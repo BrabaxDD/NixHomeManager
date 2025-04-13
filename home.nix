@@ -25,8 +25,11 @@ in
   # environment.
   imports = [ nixvim.homeManagerModules.nixvim ];
   home.packages = [
+    pkgs.zellij
     pkgs.htop
     pkgs.ripgrep
+    pkgs.tilix
+    pkgs.neofetch
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
@@ -36,13 +39,13 @@ in
     # '')
   ];
 
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
+# Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
+    ".config/zellij/config.kdl".source = dotfiles/zellij/config.kdl;
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
@@ -122,9 +125,6 @@ in
       action = "<cmd>exit<CR>";
       key = "<leader>x";
       }
-
-
-
     ];
 
 
@@ -135,6 +135,7 @@ in
       treesitter.enable = true;
       oil.enable = true;
       web-devicons.enable = true;
+      #vimtex.enable = true;
 
 
 
@@ -171,15 +172,41 @@ in
       enable = true;
       servers = {
         rust_analyzer.enable = true;
+        pyright.enable = true;
+        svelte.enable = true;
       };
+    };
+    plugins.cmp = {
+        enable = true;
+        autoEnableSources = true;
+        settings = {
+            sources = [{name = "nvim_lsp";} {name = "path";} {name = "buffer";}];
+            
+        
+
+
+    
+            mapping = {
+                    "<C-Space>" = "cmp.mapping.complete()";
+                    "<C-d>" = "cmp.mapping.scroll_docs(-4)";
+                    "<C-e>" = "cmp.mapping.close()";
+                    "<C-f>" = "cmp.mapping.scroll_docs(4)";
+                    "<CR>" = "cmp.mapping.confirm({ select = true })";
+                    "<S-Tab>" = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
+                    "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
+                    };
+                };
+        
+            };
+
+
+
+
     };
   };
   
+  wayland.windowManager.hyprland.enable = true; # enable Hyprland
 
-
-#  programs.neovim = {
-#    enable = true;
-#  };
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. These will be explicitly sourced when using a
   # shell provided by Home Manager. If you don't want to manage your shell
